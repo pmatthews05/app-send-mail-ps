@@ -1,7 +1,7 @@
+function Get-GraphAccessToken(){
 param(
     [string]$Prefix = "cfcode",
-    [string]$Name = "mail-send",
-    [string]$Location = "uksouth"
+    [string]$Name = "mail-send"
 )
 
 $KeyVaultName = "$($Prefix)kv$($Name)".Replace('-', '')
@@ -107,8 +107,5 @@ $PostSplat = @{
 }
 
 $Request = Invoke-RestMethod @PostSplat
-
-Write-Information "Access Token: $($Request.access_token)"
-
-
-
+Write-Output $request
+}

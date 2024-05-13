@@ -134,6 +134,7 @@ Write-Host "Get MS Graph API Permissions..."
 $msgraphAPISP = az ad sp list --query "[?appDisplayName == 'Microsoft Graph'].{appId:appId, id:id}" --all | ConvertFrom-Json
 $mailSendPerm = az ad sp show --id $($msgraphAPISP.appId) --query "appRoles[?value=='Mail.Send']" | ConvertFrom-Json
 $mailReadWritePerm = az ad sp show --id $($msgraphAPISP.appId) --query "appRoles[?value=='Mail.ReadWrite']" | ConvertFrom-Json
+$userReadBasicPerm = az ad sp show --id $($msgraphAPISP.appId) --query "appRoles[?value=='User.ReadBasic.All']" | ConvertFrom-Json
 
 #Check if already exist.
 $existingPermissions = az ad app permission list --id $($appRegistration.appId) --query "[?resourceAppId == '$($msgraphAPISP.appId)'].resourceAccess | [].{id:id} | [?id=='$($mailSendPerm.id)']" | ConvertFrom-Json
@@ -147,6 +148,13 @@ if ($existingPermissions.Length -eq 0) {
     Write-Host "Adding Mail Read Write Permission to App Registration..."
     az ad app permission add --id $($appRegistration.appId) --api $($msgraphAPISP.appId) --api-permissions "$($mailReadWritePerm.id)=Role"
 }
+
+$existingPermissions = az ad app permission list --id $($appRegistration.appId) --query "[?resourceAppId == '$($msgraphAPISP.appId)'].resourceAccess | [].{id:id} | [?id=='$($userReadBasicPerm.id)']" | ConvertFrom-Json
+if ($existingPermissions.Length -eq 0) {
+    Write-Host "Adding User Read Basic Permission to App Registration..."
+    az ad app permission add --id $($appRegistration.appId) --api $($msgraphAPISP.appId) --api-permissions "$($userReadBasicPerm.id)=Role"
+}
+
 
 # $o365ExchangeAPISP = az ad sp list --query "[?appDisplayName == 'Office 365 Exchange Online'].{appId:appId, id:id}" --all | ConvertFrom-Json
 # $exchangeManageAsAppPerm = az ad sp show --id $($o365ExchangeAPISP.id) --query "appRoles[?value=='Exchange.ManageAsApp']" | ConvertFrom-Json
