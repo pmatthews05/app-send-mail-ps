@@ -1,28 +1,48 @@
 param(
-    [string]$Prefix = "cfcode",
-    [string]$Name = "mail-send",
-    [string]$Location = "uksouth",
-    [string[]]$EmailTo = @("pmatthews.admin@beisdevpme5.onmicrosoft.com"),
-    [string]$EmailSubject = "Sending email from PowerShell",
-    [string]$EmailBody = "<b>Hello, world!</b>",
-    [string]$EmailBodyContentType = "HTML",
-    [string]$EmailFrom = "no-reply.mailsend@beisdevpme5.onmicrosoft.com"
+    [Parameter(Mandatory = $true)]
+    [string]
+    $Prefix,
+    [Parameter(Mandatory = $true)]
+    [string[]]
+    $EmailTo,
+    [Parameter(Mandatory = $true)]
+    [string]
+    $EmailSubject, 
+    [Parameter(Mandatory = $true)]
+    [string]
+    $EmailBody,
+    [Parameter(Mandatory = $true)]
+    [ValidateSet("HTML", "Text")]
+    [string]
+    $EmailBodyContentType,
+    [Parameter(Mandatory = $true)]
+    [string]
+    $EmailFrom,
+    [Parameter(Mandatory = $false)]
+    [string]
+    $Name = "mail-send"
 )
 
-. ./log-in-app.ps1
+Write-Host "Loading required scripts..."
+. $PSScriptRoot/log-in-app.ps1
+. $PSScriptRoot/get-msgraphmessageparameters.ps1
 
 $accessToken = Get-GraphAccessToken `
     -Prefix $Prefix `
     -Name $Name
 
-. ./get-msgraphmessageparameters.ps1
-
+Write-Host "Getting Graph Message Parameters..."
 $graphParams = $(Get-MSGraphMessageParameters `
         -EmailTo $EmailTo `
         -EmailSubject $EmailSubject `
         -EmailBody $EmailBody `
         -EmailBodyContentType $EmailBodyContentType) | ConvertTo-Json -Depth 10 -Compress
 
+$Header = @{
+    Authorization = "Bearer $($accessToken.access_token)"
+}
+
+Write-Host "Creating Draft Email..."
 $url = "https://graph.microsoft.com/v1.0/users/$EmailFrom/messages"
 
 $PostSplat = @{
@@ -35,7 +55,7 @@ $PostSplat = @{
 
 $messageRequest = Invoke-RestMethod @PostSplat
 
-Write-output $messageRequest
+Write-Host "Sending Email..."
 
 $url = "https://graph.microsoft.com/v1.0/users/$EmailFrom/messages/$($messageRequest.id)/send"
 

@@ -1,7 +1,13 @@
 param(
-    [string]$Prefix = "cfcode",
-    [string]$Name = "mail-send",
-    [string]$Location = "uksouth"
+    [Parameter(Mandatory = $true)]
+    [string]
+    $Prefix,
+    [Parameter(Mandatory = $false)]
+    [string]
+    $Name = "mail-send",
+    [Parameter(Mandatory = $false)]
+    [string]
+    $Location = "uksouth"
 )
 
 $ResourceGroupName = "$Prefix-rg-$Name"

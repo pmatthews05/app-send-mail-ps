@@ -1,7 +1,7 @@
 {
     "sharedMailBoxes": [
       {
-        "name": "no-reply.mailsend@beisdevpme5.onmicrosoft.com",
+        "name": "no-reply.mailsend",
         "displayName": "No Reply MailSend Example",
         "automaticReply": true,
         "automaticReplyMessage": "This mailbox is not monitored",
@@ -11,16 +11,17 @@
     ],
     "mailEnabledSecurityGroups": [
       {
-        "name": "no-reply-mailsend-sg@beisdevpme5.onmicrosoft.com",
+        "name": "no-reply-mailsend-sg",
         "displayName": "No Reply MailSend Security Group",
         "description": "Used to send Email",
         "owners": [
-          "pmatthews.admin@beisdevpme5.onmicrosoft.com"
+          // Add your account here
         ],
         "members": [
-          "no-reply.mailsend@beisdevpme5.onmicrosoft.com",
-          "AdeleV@beisdevpme5.onmicrosoft.com",
-          "pmatthews.admin@beisdevpme5.onmicrosoft.com"
+          "no-reply.mailsend",
+          // Add your account here
+          "AdeleV",
+          "AlexW" 
         ],
         "mailTip": "This mailbox is not monitored",
         "allowExternalToEmail": false,
@@ -29,7 +30,7 @@
     ],
     "applicationAccessPolicy": [
       {
-        "policyScopeGroupId": "no-reply-mailsend-sg@beisdevpme5.onmicrosoft.com",
+        "policyScopeGroupId": "no-reply-mailsend-sg",
         "accessRight": "RestrictAccess",
         "description": "Restricts app ##AppName## to members of the Security Enabled Email Group ##policyScopeGroupId##"
       }
