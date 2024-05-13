@@ -18,6 +18,9 @@ function Get-MSGraphMessageParameters {
 
     .PARAMETER EmailBodyContentType
         The content type of the message body. This should be "Text" or "HTML".
+
+    .PARAMETER Attachments
+        An array of file paths to the attachments. These need to be less than 3MB in size.
         
     .EXAMPLE
         $messageParameters = Get-MSGraphMessageParameters -EmailTo @("email1@example.com") -EmailSubject "Hello" -EmailBody "Hello, world!" -EmailBodyContentType "Text"
@@ -44,10 +47,13 @@ function Get-MSGraphMessageParameters {
         $EmailBody,
         [Parameter(Mandatory = $true)]
         [string]
-        $EmailBodyContentType
+        $EmailBodyContentType,
+        [Parameter(Mandatory = $false)]
+        [string[]]
+        $Attachments
     )
 
-    [array]$msgToRecipients = $EmailTo | ForEach-Object{
+    [array]$msgToRecipients = $EmailTo | ForEach-Object {
         @{
             emailAddress = @{address = $_ }
         }
@@ -56,6 +62,17 @@ function Get-MSGraphMessageParameters {
     $message += @{toRecipients = $msgToRecipients }
  
     $message += @{body = @{contentType = $EmailBodyContentType; content = $EmailBody } }
+
+    if ($Attachments) {
+        [array]$msgAttachments = $Attachments | ForEach-Object {
+            @{
+                "@odata.type" = "#microsoft.graph.fileAttachment"
+                name          = ($_ -split [regex]::Escape([IO.Path]::DirectorySeparatorChar))[-1]
+                contentBytes  = [Convert]::ToBase64String([IO.File]::ReadAllBytes($_))
+            }
+        }
+        $message += @{attachments = $msgAttachments }
+    }
 
     return $message
 }

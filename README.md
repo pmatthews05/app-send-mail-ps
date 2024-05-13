@@ -72,15 +72,16 @@ The [send-email.ps1](./src/send-email.ps1) script will send an email using the A
 It will grab the App Registration AppID and Certificate details from the KeyVault, after creating the certificate in memory it will create a JWT token and use that to authenticate with Microsoft Graph. This will return a Bearer token that will be used to send the email.
 
 Parameters for the script
-| Parameter            | Type     | Description                                                                                                | Example                                    |
-| -------------------- | -------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| Prefix               | string   | Prefix used in the Resource Group, App Registration and Key Vault                                          | `cfcode`                                   |
-| EmailTo              | string[] | Array of email address to send the email to, typically you would send this to the distribution group smtp. | `@("no-reply.mailsend-sg@contoso.com")`    |
-| EmailSubject         | string   | Subject of the email                                                                                       | `Test Email`                               |
-| EmailBody            | string   | Body of the email                                                                                          | `<b>Hello World, This is a test email</b>` |
-| EmailBodyContentType | string   | Content Type of the email body (Text/HTML)                                                                 | `HTML`                                     |
-| EmailFrom            | string   | Email address to send the email from, this should be your shared mailbox                                   | `no-reply.mailsend@contso.com`             |
-| Name                 | string   | Name used in the Resource Group, App Regstration and Key Vault                                             | `mail-send`                                |
+| Parameter            | Type     | Description                                                                                                | Example                                       |
+| -------------------- | -------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Prefix               | string   | Prefix used in the Resource Group, App Registration and Key Vault                                          | `cfcode`                                      |
+| EmailTo              | string[] | Array of email address to send the email to, typically you would send this to the distribution group smtp. | `@("no-reply.mailsend-sg@contoso.com")`       |
+| EmailSubject         | string   | Subject of the email                                                                                       | `Test Email`                                  |
+| EmailBody            | string   | Body of the email                                                                                          | `<b>Hello World, This is a test email</b>`    |
+| EmailBodyContentType | string   | Content Type of the email body (Text/HTML)                                                                 | `HTML`                                        |
+| EmailFrom            | string   | Email address to send the email from, this should be your shared mailbox                                   | `no-reply.mailsend@contso.com`                |
+| Name                 | string   | (Optional) Name used in the Resource Group, App Regstration and Key Vault                                  | `mail-send`                                   |
+| Attachments          | string   | (Optional) Array of file paths to attach to the email                                                      | `@("C:\temp\file1.txt", "C:\temp\file2.txt")` |
 
 
 ```powershell
@@ -90,5 +91,8 @@ Parameters for the script
   -EmailSubject "Welcome to the team" `
   -EmailBody "<b>Welcome to the team</b>, Please review our policies found here https://contoso.com/policies" `
   -EmailBodyContentType "HTML" `
-  -EmailFrom "no-reply.mailsend@contso.com"
+  -EmailFrom "no-reply.mailsend@contso.com" `
+  -Attachments @( "..\files\under3mb.pdf", "..\files\over3mb.pdf")
 ```
+
+The example uploads 2 different file size attachments, this is because there are 2 different ways of uploading attachments depending on the size of the file. If the file is under 3MB you can use the `fileAttachment` property in the email object. If the file is over 3MB you will need to use the `uploadSession` property in the email object.
