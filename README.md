@@ -36,7 +36,7 @@ Pass in parameters to customize the App
 ```powershell
 # Example
 ./src/create-app-reg.ps1 `
-  -Prefix "cfcode" `
+  -Prefix "contso" `
   -Name "mail-send" `
   -Location "uksouth"
 ```
@@ -58,8 +58,12 @@ This json file will help you create the following:
 Run the [setup-emailconfig.ps1](./src/setup-emailconfig.ps1) script to create the Shared Mailbox, Security Enabled Group and Application Access Policy. It will grab the App Registration AppID from the KeyVault.
 ```powershell
 # Example
+
+Install-Module ExchangeOnlineManagement -AllowClobber -Scope Currentuser -Force
+Connect-ExchangeOnline -ShowBanner:$false
+
 ./src/setup-emailconfig.ps1 `
-  -Prefix "cfcode" `
+  -Prefix "contso" `
   -TenantDomain "contoso.com" `
   -Name "mail-send"
 ```
@@ -74,19 +78,19 @@ It will grab the App Registration AppID and Certificate details from the KeyVaul
 Parameters for the script
 | Parameter            | Type     | Description                                                                                                | Example                                       |
 | -------------------- | -------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Prefix               | string   | Prefix used in the Resource Group, App Registration and Key Vault                                          | `cfcode`                                      |
+| Prefix               | string   | Prefix used in the Resource Group, App Registration and Key Vault                                          | `contso`                                      |
 | EmailTo              | string[] | Array of email address to send the email to, typically you would send this to the distribution group smtp. | `@("no-reply.mailsend-sg@contoso.com")`       |
 | EmailSubject         | string   | Subject of the email                                                                                       | `Test Email`                                  |
 | EmailBody            | string   | Body of the email                                                                                          | `<b>Hello World, This is a test email</b>`    |
 | EmailBodyContentType | string   | Content Type of the email body (Text/HTML)                                                                 | `HTML`                                        |
 | EmailFrom            | string   | Email address to send the email from, this should be your shared mailbox                                   | `no-reply.mailsend@contso.com`                |
-| Name                 | string   | (Optional) Name used in the Resource Group, App Registration and Key Vault                                  | `mail-send`                                   |
+| Name                 | string   | (Optional) Name used in the Resource Group, App Registration and Key Vault                                 | `mail-send`                                   |
 | Attachments          | string   | (Optional) Array of file paths to attach to the email                                                      | `@("C:\temp\file1.txt", "C:\temp\file2.txt")` |
 
 
 ```powershell
 ./src/send-email.ps1 `
-  -Prefix "cfcode" `
+  -Prefix "contso" `
   -EmailTo @("no-reply.mailsend-sg@contoso.com") `
   -EmailSubject "Welcome to the team" `
   -EmailBody "<b>Welcome to the team</b>, Please review our policies found here https://contoso.com/policies" `

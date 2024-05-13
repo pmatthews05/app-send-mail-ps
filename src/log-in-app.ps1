@@ -1,4 +1,26 @@
 function Get-GraphAccessToken() {
+    <#
+    .SYNOPSIS
+        This gets the Access Token for the Microsoft Graph API.
+
+    .DESCRIPTION
+       The function gets the AppId and Cert from the KeyVault, creates a JWT, and calls the Azure AD endpoint to get the access token.
+
+    .PARAMETER Prefix
+        The prefix to use for the resources.
+
+    .PARAMETER Name
+        The name to use for the resources. Default is "mail-send".
+        
+    .EXAMPLE
+        Get-GraphAccessToken -Prefix "contoso" -Name "mail-send"    
+
+    .OUTPUTS
+        Access Token.
+
+    .LINK
+        For more information about getting an access token with Microsoft Graph API, see: https://learn.microsoft.com/graph/auth-overview   
+    #>
     param(
         [Parameter(Mandatory = $true)]
         [string]

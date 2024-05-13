@@ -14,7 +14,7 @@ function Add-LargeAttachmentsToDraftMessage {
         An array of file paths to the attachments.
 
     .PARAMETER UserId
-        The ID of the user who owns the draft message.
+        The UserPrincipal or Object ID of the user who owns the draft message.
     
     .PARAMETER AccessToken
         The access token to authenticate the request.

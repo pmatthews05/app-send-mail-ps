@@ -1,7 +1,29 @@
-# Need to install PowerShell Module
-# - ExchangeOnlineManagement 'Install-Module ExchangeOnlineManagement -AllowClobber -Scope Currentuser -Force'
-# Connect-ExchangeOnline -ShowBanner:$false
+<#
+    .SYNOPSIS
+        This script sets up Shared Mailboxes, Mail Enabled Security Groups, and Application Access Policies for the email configuration.
 
+    .DESCRIPTION
+        The script reads the email-setup.json file and creates Shared Mailboxes, Mail Enabled Security Groups, and Application Access Policies based on the configuration.
+
+    .PARAMETER Prefix
+        The prefix to use for the resources.
+
+    .PARAMETER TenantDomain
+        The domain of the tenant e.g, contoso.onmicrosoft.com
+
+    .PARAMETER Name
+        The name to use for the resources. Default is "mail-send".
+    
+    .EXAMPLE
+        .\setup-emailconfig.ps1 -Prefix "contoso" -TenantDomain "contoso.onmicrosoft.com"
+
+    .LINK
+        For more information about setting up Shared Mailboxes, Mail Enabled Security Groups, and Application Access Policies, see: 
+        https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailbox
+        https://learn.microsoft.com/en-us/powershell/module/exchange/set-distributiongroup
+        https://learn.microsoft.com/en-us/powershell/module/exchange/new-applicationaccesspolicy
+
+#>
 param(
     [Parameter(Mandatory = $true)]
     [string]

@@ -1,3 +1,31 @@
+<#
+    .SYNOPSIS
+        Creates the App Registration, Resource Group, Key Vault, and Service Principal for the specified prefix and name with the correct permissions.
+
+    .DESCRIPTION
+        Create Resource Group and Key Vault
+        Create an App Registration in Azure AD with Self Signed Certificate
+        Add the following API Permissions:
+        - Microsoft Graph
+            - Mail.Send
+            - Mail.ReadWrite
+        Grant Role Assignment to the App Registration
+        Adds the current user as a Key Vault Administrator
+
+    .PARAMETER Prefix
+        The prefix to use for the resources.
+
+    .PARAMETER Name
+        The name to use for the resources. Default is "mail-send".
+
+    .PARAMETER Location
+        The location to create the resources. Default is "uksouth".
+    
+    
+    .EXAMPLE
+        .\create-app-reg.ps1 -Prefix "contoso" -Name "mail-send" -Location "uksouth"
+#>
+[CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
     [string]
@@ -161,51 +189,6 @@ if ($existingPermissions.Length -eq 0) {
     az ad app permission add --id $($appRegistration.appId) --api $($msgraphAPISP.appId) --api-permissions "$($userReadBasicPerm.id)=Role"
 }
 
-
-# $o365ExchangeAPISP = az ad sp list --query "[?appDisplayName == 'Office 365 Exchange Online'].{appId:appId, id:id}" --all | ConvertFrom-Json
-# $exchangeManageAsAppPerm = az ad sp show --id $($o365ExchangeAPISP.id) --query "appRoles[?value=='Exchange.ManageAsApp']" | ConvertFrom-Json
-
-# $existingPermissions = az ad app permission list --id $($appRegistration.appId) --query "[?resourceAppId == '$($o365ExchangeAPISP.appId)'].resourceAccess | [].{id:id} | [?id=='$($exchangeManageAsAppPerm.id)']" | ConvertFrom-Json
-# if ($existingPermissions.Length -eq 0) {
-#     Write-Host "Adding Exchange Manage As App Permission to App Registration..."
-#     az ad app permission add --id $($appRegistration.appId) --api $($o365ExchangeAPISP.appId) --api-permissions "$($exchangeManageAsAppPerm.id)=Role"
-# }
-
 #Grant Permissions.
 Write-Host "Granting Admin Consent..."
 az ad app permission admin-consent --id $appRegistration.appId
-
-#Role Assignments
-#Exchange Administrator Role #29232cdf-9323-42fd-ade2-1d097af3e4de
-#$tokenResponse = az account get-access-token --resource-type ms-graph | ConvertFrom-Json
-#$headers = @{Authorization = "Bearer $($tokenResponse.accessToken)" }
-
-# $roleAssignment = $(az rest --method GET --url "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '29232cdf-9323-42fd-ade2-1d097af3e4de' and principalId eq '$($servicePrincipal.id)'") | ConvertFrom-Json
-# if ($roleAssignment.value.Count -eq 0) {
-#     Write-Host "Assigning Exchange Administrator Role to App..."
-#     Invoke-RestMethod `
-#         -Uri: "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments" `
-#         -Headers: $headers `
-#         -Method: "POST" `
-#         -ContentType: "application/json" `
-#         -Body: $(@{
-#             principalId      = $servicePrincipal.id
-#             roleDefinitionId = "29232cdf-9323-42fd-ade2-1d097af3e4de"
-#             directoryScopeId = "/"
-#         } | ConvertTo-Json) | Out-Null        
-# }
-# #Compliance Administrator Role #17315797-102d-40b4-93e0-432062caca18
-# $roleAssignment = $(az rest --method GET --url "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '17315797-102d-40b4-93e0-432062caca18' and principalId eq '$($servicePrincipal.id)'") | ConvertFrom-Json
-# if ($roleAssignment.value.Count -eq 0) {
-#     Write-Host "Assigning Compliance Administrator Role to App..."
-#     Invoke-RestMethod `
-#         -Uri: "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments" `
-#         -Headers: $headers `
-#         -Method: "POST" `
-#         -ContentType: "application/json" `
-#         -Body: $(@{
-#             principalId      = $servicePrincipal.id
-#             roleDefinitionId = "17315797-102d-40b4-93e0-432062caca18"
-#             directoryScopeId = "/"
-#         } | ConvertTo-Json) | Out-Null   
-# }
