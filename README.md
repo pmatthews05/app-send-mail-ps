@@ -80,7 +80,7 @@ Parameters for the script
 | EmailBody            | string   | Body of the email                                                                                          | `<b>Hello World, This is a test email</b>`    |
 | EmailBodyContentType | string   | Content Type of the email body (Text/HTML)                                                                 | `HTML`                                        |
 | EmailFrom            | string   | Email address to send the email from, this should be your shared mailbox                                   | `no-reply.mailsend@contso.com`                |
-| Name                 | string   | (Optional) Name used in the Resource Group, App Regstration and Key Vault                                  | `mail-send`                                   |
+| Name                 | string   | (Optional) Name used in the Resource Group, App Registration and Key Vault                                  | `mail-send`                                   |
 | Attachments          | string   | (Optional) Array of file paths to attach to the email                                                      | `@("C:\temp\file1.txt", "C:\temp\file2.txt")` |
 
 
