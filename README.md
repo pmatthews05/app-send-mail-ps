@@ -1,5 +1,8 @@
 # app-send-mail-ps
-Setup and code to send email using an App Registration and Microsoft Graph
+Setup and code to send email using an App Registration and Microsoft Graph.
+
+Using an App Registration to send emails is a good way to send emails from a service account without needing a user account to authenticate with. This is useful for sending automated emails from services or applications.
+Setting up application access policy allows you to lock the application down to only send emails from a specific group of users. This is useful for ensuring that only certain applications can send emails.
 
 ![Send Email](./images/Mail%20Enabled%20Apps.png)
 
