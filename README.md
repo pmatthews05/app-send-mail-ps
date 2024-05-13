@@ -96,3 +96,5 @@ Parameters for the script
 ```
 
 The example uploads 2 different file size attachments, this is because there are 2 different ways of uploading attachments depending on the size of the file. If the file is under 3MB you can use the `fileAttachment` property in the email object. If the file is over 3MB you will need to use the `uploadSession` property in the email object.
+
+![Send Email](./images/example-email.png)
