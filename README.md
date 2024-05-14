@@ -57,6 +57,8 @@ This json file will help you create the following:
   - It is also used as a distribution group if you wish to send to all members of the group using the Mail Enabled Security Group SMTP `no-reply-mailsend-sg@[tenantdomain]`.
 - Application Access Policy
   - This policy will grant the application the ability to send emails from anyone who is a member of the Mail Enabled Security Group.
+  
+> Note: Changes to application access policies can take longer than 1 hour to take effect in Microsoft Graph REST API calls, even when Test-ApplicationAccessPolicy shows positive results.
 
 Run the [setup-emailconfig.ps1](./src/setup-emailconfig.ps1) script to create the Shared Mailbox, Security Enabled Group and Application Access Policy. It will grab the App Registration AppID from the KeyVault.
 ```powershell
